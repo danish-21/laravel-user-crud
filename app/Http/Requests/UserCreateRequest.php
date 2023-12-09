@@ -11,7 +11,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -25,6 +25,7 @@ class UserCreateRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|unique:users',
             'mobile' => 'required|unique:users',
+            'status' => 'boolean'
         ];
     }
 }

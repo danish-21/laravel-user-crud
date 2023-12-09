@@ -24,15 +24,54 @@
         input[type="text"] {
             padding: 5px;
         }
+
+        .add-user-button, button.search {
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button.search {
+            margin-right: 10px; /* Add margin to the right side of the search button */
+        }
+
+        .add-user-button {
+            float: right;
+        }
+
+        form {
+            display: inline-block;
+        }
+
+        button.edit, button.delete {
+            padding: 5px 8px;
+            background-color: #4285f4;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
     </style>
+
+
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
 
 <h2>User List</h2>
+<a href="{{ route('users.create') }}" class="add-user-button">Add</a>
 
 <form action="{{ route('users.index') }}" method="GET">
     <input type="text"  name="q" value="{{ request('q') }}">
-    <button type="submit">Search</button>
+    <button type="submit" class="search">Search</button>
 </form>
 
 <table>
@@ -49,12 +88,23 @@
     <tbody>
     @forelse($users as $index => $user)
         <tr>
-            <td>{{ $users->firstItem() + $index }}
+            <td>{{ $users->firstItem() + $index }}</td>
             <td>{{ $user->name }}</td>
             <td>{{ $user->email }}</td>
             <td>{{ $user->mobile }}</td>
-            <td>{{ $user->status }}</td>
-            <td></td>
+            <td> @if($user->status == 1)
+                    Active
+                @else
+                    Inactive
+                @endif</td>
+            <td>
+                <a href="{{ route('users.edit', $user->id) }}" title="Edit User">
+                    <button class="edit">✏️</button>
+                </a>
+
+                <!-- Delete user button with jQuery confirmation popup -->
+                <button type="button" title="Delete User" class="delete" onclick="confirmDelete({{ $user->id }})">❌</button>
+            </td>
         </tr>
     @empty
         <tr>
@@ -64,6 +114,16 @@
     </tbody>
 </table>
 {{$users->links()}}
+
+<script>
+    // jQuery function for delete confirmation popup
+    function confirmDelete(userId) {
+        if (confirm("Are you sure you want to delete this user?")) {
+            // If the user confirms, submit the form for deletion
+            $('form#deleteForm-' + userId).submit();
+        }
+    }
+</script>
 
 </body>
 </html>
