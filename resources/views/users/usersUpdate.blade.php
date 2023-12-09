@@ -46,7 +46,6 @@
             background-color: #333;
         }
     </style>
-    <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
@@ -78,21 +77,17 @@
 
 <script>
     $(document).ready(function () {
-        // Handle form submission using jQuery
         $("#updateBtn").click(function () {
             $.ajax({
                 url: $("#updateUserForm").attr("action"),
                 method: "POST",
                 data: $("#updateUserForm").serialize(),
                 success: function (response) {
-                    // Display success message
                     $("#success-message").text("User updated successfully!");
 
-                    // You may redirect to another page if needed
-                    // window.location.href = "{{ route('users.index') }}";
+                     window.location.href = "{{ route('users.index') }}";
                 },
                 error: function (error) {
-                    // Handle errors if any
                     console.log(error);
                 }
             });

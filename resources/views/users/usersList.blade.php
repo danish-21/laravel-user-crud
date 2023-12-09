@@ -37,7 +37,7 @@
         }
 
         button.search {
-            margin-right: 10px; /* Add margin to the right side of the search button */
+            margin-right: 10px;
         }
 
         .add-user-button {
@@ -61,7 +61,6 @@
     </style>
 
 
-    <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
@@ -70,7 +69,7 @@
 <a href="{{ route('users.create') }}" class="add-user-button">Add</a>
 
 <form action="{{ route('users.index') }}" method="GET">
-    <input type="text"  name="q" value="{{ request('q') }}">
+    <input type="text" name="q" value="{{ request('q') }}">
     <button type="submit" class="search">Search</button>
 </form>
 
@@ -103,7 +102,14 @@
                 </a>
 
                 <!-- Delete user button with jQuery confirmation popup -->
-                <button type="button" title="Delete User" class="delete" onclick="confirmDelete({{ $user->id }})">❌</button>
+                <form id="deleteForm-{{ $user->id }}" action="{{ route('users.destroy', $user->id) }}" method="POST"
+                      style="display: inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="button" title="Delete User" class="delete" onclick="confirmDelete({{ $user->id }})">
+                        ❌
+                    </button>
+                </form>
             </td>
         </tr>
     @empty
@@ -113,16 +119,15 @@
     @endforelse
     </tbody>
 </table>
-{{$users->links()}}
+{{$users->links('custom')}}
 
 <script>
-    // jQuery function for delete confirmation popup
     function confirmDelete(userId) {
         if (confirm("Are you sure you want to delete this user?")) {
-            // If the user confirms, submit the form for deletion
-            $('form#deleteForm-' + userId).submit();
+            $('#deleteForm-' + userId).submit();
         }
     }
+
 </script>
 
 </body>
